@@ -1,0 +1,43 @@
+%META:TOPICPARENT{name="Plugins"}%
+---+ !DefaultPreferencesPlugin
+
+%SHORTDESCRIPTION%
+
+---++ Installation
+%$INSTALL_INSTRUCTIONS%
+
+To enable default preferences you *have to* set =$Foswiki::cfg{Store}{PrefsBackend}=
+to =Foswiki::Prefs::EnhancedTopicRAM=.
+
+---++ Providing default preferences
+Default preferences can be provided for both, Web- and !SitePreferences.%BR%
+Both can be included in your perl module file of your plugin or contrib as shown
+below:
+<verbatim>
+our $SITEPREFS = {
+  FOOPREF => 'Foo',
+  ANOTHERPREF => 123
+};
+
+our $WEBPREFS = {
+   BARPREF => 'Bar'
+};
+</verbatim>
+
+While site prefs were inherited by default, you have to explicitly say which web
+preferences you want to include. You can do so by passing a list of wiki plugins/
+contribs to preference =DEFAULT_SOURCE= within the according !WebPreferences.
+
+<verbatim>
+   * Set DEFAULT_SOURCE = QwikiContrib,ModacSkin,...
+</verbatim>
+
+---++ Plugin Info
+
+| Author: | Foswiki:Main.JanKrueger, Foswiki:Main.SvenMeyer |
+| Copyright: | &copy; 2016, Modell Aachen !GmbH |
+| License: | GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]]) |
+| Release: | %$RELEASE% |
+| Version: | %$VERSION% |
+| Home: | http://www.modell-aachen.de |
+| Support: | http://www.modell-aachen.de |

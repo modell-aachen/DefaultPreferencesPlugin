@@ -1,0 +1,35 @@
+%TMPL:INCLUDE{"view"}%
+
+%TMPL:DEF{"text_siteprefs"}%
+Preferences listed below are set by
+[[%SYSTEMWEB%.DefaultPreferencesPlugin][DefaultPreferencesPlugin]].%BR%
+To change one of those values just edit this topic and include the according
+preferences keys.%TMPL:END%
+
+%TMPL:DEF{"text_webprefs"}%
+Preference may be enabled by setting =DEFAULT_SOURCE= to the according source
+component. E.g.
+<verbatim class="tml">
+   * Set DEFAULT_SOURCE = QwikiContrib,ModacSkin
+</verbatim>
+
+%RED% *Please note:* %ENDCOLOR%%BR%
+Enabling components which are providing the same preferences keys won't override
+each other. The first component including that key will define the preferences
+value.%BR%
+For instance, let's say =QwikiContrib= and =ModacSkin= are both providing a
+preference called =FOO=. Enabling both components like shown above will include
+the preferences value from =QwikiContrib= and skipping the one provided by
+=ModacSkin=.%TMPL:END%
+
+%TMPL:DEF{"content"}%%TMPL:PREV%%JQREQUIRE%
+---++ Default Preferences
+
+%IF{"'%TOPIC%'='WebPreferences'" then="$percntTMPL:P{\"text_webprefs\"}$percnt"}%%{
+}%%IF{"'%TOPIC%'='SitePreferences'" then="$percntTMPL:P{\"text_siteprefs\"}$percnt"}%
+
+%TWISTY{showlink="Show preferences" hidelink="Hide preferences"}%
+%DEFAULTPREFS%
+%ENDTWISTY%%BR%
+---
+%TMPL:END%
