@@ -10,7 +10,7 @@ preferences keys.%TMPL:END%
 Preference may be enabled by setting =DEFAULT_SOURCE= to the according source
 component. E.g.
 <verbatim class="tml">
-   * Set DEFAULT_SOURCE = QwikiContrib,ModacSkin
+   * Set DEFAULT_SOURCES = QwikiContrib,ModacSkin
 </verbatim>
 
 %RED% *Please note:* %ENDCOLOR%%BR%

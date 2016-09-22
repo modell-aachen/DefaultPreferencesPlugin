@@ -26,10 +26,10 @@ our $WEBPREFS = {
 
 While site prefs were inherited by default, you have to explicitly say which web
 preferences you want to include. You can do so by passing a list of wiki plugins/
-contribs to preference =DEFAULT_SOURCE= within the according !WebPreferences.
+contribs to preference =DEFAULT_SOURCES= within the according !WebPreferences.
 
 <verbatim>
-   * Set DEFAULT_SOURCE = QwikiContrib,ModacSkin,...
+   * Set DEFAULT_SOURCES = QwikiContrib,ModacSkin,...
 </verbatim>
 
 ---++ Plugin Info
