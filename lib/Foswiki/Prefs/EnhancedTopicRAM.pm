@@ -95,9 +95,9 @@ sub stringify {
     }
   }
 
-  my $sitePrefs = join("\n", @sitePrefs);
-  my $webPrefs = join("\n", @webPrefs);
-  my $availPrefs = join("\n", @availPrefs);
+  my $sitePrefs = join("\n", sort @sitePrefs);
+  my $webPrefs = join("\n", sort @webPrefs);
+  my $availPrefs = join("\n", sort @availPrefs);
 
   return $sitePrefs if $type eq 'site';
   return <<PREFS if $type eq 'web';
