@@ -65,7 +65,7 @@ sub applyPrefs {
   while (my ($package, $prefs) = each %{$cache{$type}}) {
     next unless ref($prefs) eq 'HASH';
     while (my ($key, $value) = each %$prefs) {
-      if ($type eq 'site' || $this->{values}{DEFAULT_SOURCES} =~ /$package/) {
+      if ($type eq 'site' || ($this->{values}{DEFAULT_SOURCES} || '') =~ /$package/) {
         $this->{values}{$key} = $value unless exists $this->{values}{$key};
       }
     }
