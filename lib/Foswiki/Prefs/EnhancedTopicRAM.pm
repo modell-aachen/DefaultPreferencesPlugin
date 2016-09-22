@@ -60,7 +60,7 @@ sub fetchPrefs {
 
 sub applyPrefs {
   my ($this, $type) = @_;
-  return unless defined %cache && defined $cache{$type};
+  return unless %cache && defined $cache{$type};
 
   while (my ($package, $prefs) = each %{$cache{$type}}) {
     next unless ref($prefs) eq 'HASH';
@@ -74,7 +74,7 @@ sub applyPrefs {
 
 sub stringify {
   my ($this) = @_;
-  return '' unless defined %cache;
+  return '' unless %cache;
 
   my $meta = $this->{topicObject};
   my $type = 'web' if $meta->topic eq $Foswiki::cfg{WebPrefsTopicName};
