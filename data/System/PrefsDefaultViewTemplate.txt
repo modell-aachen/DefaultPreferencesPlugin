@@ -28,8 +28,10 @@ the preferences value from =QwikiContrib= and skipping the one provided by
 %IF{"'%TOPIC%'='WebPreferences'" then="$percntTMPL:P{\"text_webprefs\"}$percnt"}%%{
 }%%IF{"'%TOPIC%'='SitePreferences'" then="$percntTMPL:P{\"text_siteprefs\"}$percnt"}%
 
+<div id="defaultPrefs">
 %TWISTY{showlink="Show preferences" hidelink="Hide preferences"}%
 %DEFAULTPREFS%
 %ENDTWISTY%%BR%
+</div>
 ---
 %TMPL:END%
