@@ -117,6 +117,7 @@ sub _getPrefs {
   no strict 'refs';
   unless ($mod =~ /Plugin$/) {
     my $name = $mod;
+    next if $mod eq 'VirtualHostingContrib'; # avoid UI engine monkey-patch
     $mod = "Foswiki::Contrib::$mod";
     require "Foswiki/Contrib/$name.pm" unless ${$mod . '::VERSION'};
   }
