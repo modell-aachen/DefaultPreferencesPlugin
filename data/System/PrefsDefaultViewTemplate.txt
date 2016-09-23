@@ -7,7 +7,7 @@ To change one of those values just edit this topic and include the according
 preferences keys.%TMPL:END%
 
 %TMPL:DEF{"text_webprefs"}%
-Preference may be enabled by setting =DEFAULT_SOURCE= to the according source
+Preference may be enabled by setting =DEFAULT_SOURCES= to the according source
 component. E.g.
 <verbatim class="tml">
    * Set DEFAULT_SOURCES = QwikiContrib,ModacSkin
