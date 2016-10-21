@@ -1,0 +1,5 @@
+!noci
+data/System/DefaultPreferencesPlugin.txt 0644
+data/System/PrefsDefaultViewTemplate.txt 0644
+lib/Foswiki/Plugins/DefaultPreferencesPlugin.pm 0444
+lib/Foswiki/Prefs/EnhancedTopicRAM.pm 0444
