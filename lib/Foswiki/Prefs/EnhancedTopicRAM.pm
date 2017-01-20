@@ -85,6 +85,7 @@ sub stringify {
   while (my ($package, $prefs) = each %{$cache{$type}}) {
     next unless ref($prefs) eq 'HASH';
     while (my ($key, $value) = each %$prefs) {
+      $value =~ s/%/%<nop>/g;
       if ($type eq 'site') {
         push @sitePrefs, "   * Set $key = $value <small>(%GREEN%$package%ENDCOLOR%)</small>";
       } elsif ($this->{values}{DEFAULT_SOURCES} =~ /$package/) {
