@@ -88,7 +88,7 @@ sub stringify {
       $value =~ s/%/%<nop>/g;
       if ($type eq 'site') {
         push @sitePrefs, "   * Set $key = $value <small>(%GREEN%$package%ENDCOLOR%)</small>";
-      } elsif ($this->{values}{DEFAULT_SOURCES} =~ /$package/) {
+      } elsif (defined $package && $this->{values}{DEFAULT_SOURCES} =~ /$package/) {
         push @webPrefs, "   * Set $key = $value <small>(%GREEN%$package%ENDCOLOR%)</small>";
       } else {
         push @availPrefs, "   * Set $key = $value <small>(%GREEN%$package%ENDCOLOR%)</small>";
