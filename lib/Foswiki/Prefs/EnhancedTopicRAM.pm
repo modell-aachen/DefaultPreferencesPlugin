@@ -70,6 +70,16 @@ sub applyPrefs {
       }
     }
   }
+  if($this->{values}{PREFERENCES_SOURCE}){
+    my $sourcePrefsWeb = $this->{values}{PREFERENCES_SOURCE};
+    my ($sourceMeta, undef) = Foswiki::Func::readTopic($sourcePrefsWeb, "WebPreferences");
+    if($sourceMeta){
+      my $sourceRam = Foswiki::Prefs::EnhancedTopicRAM->new($sourceMeta);
+      while(my ($key, $value) = each $sourceRam->{values}){
+        $this->{values}{$key} = $value unless exists $this->{values}{$key};
+      }
+    }
+  }
 }
 
 sub stringify {
