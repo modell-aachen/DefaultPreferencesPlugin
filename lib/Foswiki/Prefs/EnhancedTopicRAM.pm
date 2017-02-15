@@ -76,7 +76,10 @@ sub applyPrefs {
     if($sourceMeta){
       my $sourceRam = Foswiki::Prefs::EnhancedTopicRAM->new($sourceMeta);
       while(my ($key, $value) = each %{$sourceRam->{values}}){
-        $this->{values}{$key} = $value unless exists $this->{values}{$key};
+        my $isFinal = $sourceRam->{values}{FINALPREFERENCES} =~ /$key/;
+        if($isFinal || !exists $this->{values}{$key}){
+          $this->{values}{$key} = $value
+        }
       }
     }
   }
