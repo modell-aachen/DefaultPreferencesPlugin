@@ -16,6 +16,25 @@ sub new {
     my ($proto, $meta) = @_;
     my $this = $proto->SUPER::new($meta);
 
+    # Inherit preferences from the web defined in INHERITED_WEB
+    # by creating a new level in the preferences stack.
+
+    # This should only happen if this constructor is called from a
+    # topic context push. Otherwise the stack will get corrupted.
+    # The only way to check this is to inspect the calling function.
+    # On a push to the topic context the constructor is always called by Foswiki::Prefs::_getBackend.
+    my $inheritedWeb = $this->{values}{INHERITED_WEB};
+    my (undef, undef, undef, $subroutine) = caller(1);
+    if($inheritedWeb && $subroutine eq 'Foswiki::Prefs::_getBackend'){
+      my $prefs = $meta->{_session}->{prefs};
+      my $stack = $prefs->{main};
+      unless ($inheritedWeb =~ /^\s*$/){
+        my $sourceRam = $prefs->_getBackend(Foswiki::Func::normalizeWebTopicName($inheritedWeb, $Foswiki::cfg{WebPrefsTopicName}));
+        $stack->newLevel($sourceRam);
+      }
+    }
+
+    # Apply default preferences.
     $this->fetchPrefs if $meta->topic eq $Foswiki::cfg{SitePrefsTopicName};
     $this->applyPrefs('site') if ($meta->web.".".$meta->topic) eq $Foswiki::cfg{LocalSitePreferences};
     $this->applyPrefs('web') if $meta->topic eq $Foswiki::cfg{WebPrefsTopicName};
@@ -67,19 +86,6 @@ sub applyPrefs {
     while (my ($key, $value) = each %$prefs) {
       if ($type eq 'site' || ($this->{values}{DEFAULT_SOURCES} || '') =~ /$package/) {
         $this->{values}{$key} = $value unless exists $this->{values}{$key};
-      }
-    }
-  }
-  if($this->{values}{PREFERENCES_SOURCE}){
-    my $sourcePrefsWeb = $this->{values}{PREFERENCES_SOURCE};
-    my ($sourceMeta, undef) = Foswiki::Func::readTopic($sourcePrefsWeb, "WebPreferences");
-    if($sourceMeta){
-      my $sourceRam = Foswiki::Prefs::EnhancedTopicRAM->new($sourceMeta);
-      while(my ($key, $value) = each %{$sourceRam->{values}}){
-        my $isFinal = $sourceRam->{values}{FINALPREFERENCES} =~ /$key/;
-        if($isFinal || !exists $this->{values}{$key}){
-          $this->{values}{$key} = $value
-        }
       }
     }
   }
