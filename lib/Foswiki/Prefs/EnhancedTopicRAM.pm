@@ -34,10 +34,13 @@ sub new {
       }
     }
 
+    $this->{inheritedDefaultPrefs} = ();
+
     # Apply default preferences.
     $this->fetchPrefs if $meta->topic eq $Foswiki::cfg{SitePrefsTopicName};
     $this->applyPrefs('site') if ($meta->web.".".$meta->topic) eq $Foswiki::cfg{LocalSitePreferences};
     $this->applyPrefs('web') if $meta->topic eq $Foswiki::cfg{WebPrefsTopicName};
+
 
     return $this;
 }
@@ -85,6 +88,13 @@ sub applyPrefs {
     next unless ref($prefs) eq 'HASH';
     while (my ($key, $value) = each %$prefs) {
       if ($type eq 'site' || ($this->{values}{DEFAULT_SOURCES} || '') =~ /$package/) {
+        # We also track which preferences were set by default preferences
+        # so we are able to comprehend from the outside where settings come from.
+        $this->{inheritedDefaultPrefs}{$key} = {
+          module => $package,
+          value => $value,
+          isOverridden => exists $this->{values}{$key}
+        };
         $this->{values}{$key} = $value unless exists $this->{values}{$key};
       }
     }
