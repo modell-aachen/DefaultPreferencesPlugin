@@ -32,6 +32,17 @@ contribs to preference =DEFAULT_SOURCES= within the according !WebPreferences.
    * Set DEFAULT_SOURCES = QwikiContrib,ModacSkin,...
 </verbatim>
 
+---++ Inheriting WebPreferences
+It is also possible to inherit preferences from other webs. E.g.
+<verbatim>
+* Set INHERITED_WEB = OtherWeb
+</verbatim>
+
+This will inherit the following preferences:
+   * All preferences which are explicitly set in the inherited WebPreferences.
+   * All default preferences set in the inherited WebPreferences.
+   * All preferences the inherited web inherits from another web (when the inherited web itself specifies INHERITED_WEB)
+
 ---++ Plugin Info
 
 | Author: | Foswiki:Main.JanKrueger, Foswiki:Main.SvenMeyer |

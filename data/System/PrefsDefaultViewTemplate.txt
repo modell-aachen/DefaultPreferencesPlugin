@@ -7,7 +7,7 @@ To change one of those values just edit this topic and include the according
 preferences keys.%TMPL:END%
 
 %TMPL:DEF{"text_webprefs"}%
-Preference may be enabled by setting =DEFAULT_SOURCES= to the according source
+Default preferences may be enabled by setting =DEFAULT_SOURCES= to the according source
 component. E.g.
 <verbatim class="tml">
    * Set DEFAULT_SOURCES = QwikiContrib,ModacSkin
@@ -20,10 +20,15 @@ value.%BR%
 For instance, let's say =QwikiContrib= and =ModacSkin= are both providing a
 preference called =FOO=. Enabling both components like shown above will include
 the preferences value from =QwikiContrib= and skipping the one provided by
-=ModacSkin=.%TMPL:END%
+=ModacSkin=.
+
+Additional preferences can be inherited from another Web by setting =INHERITED_WEB= to the according web name. E.g.
+<verbatim class="tml">
+   * Set INHERITED_WEB = OtherWeb
+</verbatim>%TMPL:END%
 
 %TMPL:DEF{"content"}%%TMPL:PREV%%JQREQUIRE%
----++ Default Preferences
+---++ Preferences Overview
 
 %IF{"'%TOPIC%'='WebPreferences'" then="$percntTMPL:P{\"text_webprefs\"}$percnt"}%%{
 }%%IF{"'%TOPIC%'='SitePreferences'" then="$percntTMPL:P{\"text_siteprefs\"}$percnt"}%
@@ -33,5 +38,6 @@ the preferences value from =QwikiContrib= and skipping the one provided by
 %DEFAULTPREFS%
 %ENDTWISTY%%BR%
 </div>
+
 ---
 %TMPL:END%
