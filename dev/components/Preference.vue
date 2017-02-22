@@ -1,7 +1,7 @@
 <template>
     <div class="expanded row">
         <div class="shrink column">
-            <button ref="copy-button" class="tiny button" v-bind:data-clipboard-text="clipboardText">
+            <button title="Click to copy to clipboard" ref="copy-button" class="tiny button" v-bind:data-clipboard-text="clipboardText">
                 <i class="fa fa-clipboard" aria-hidden="true"></i>
             </button>
         </div>
@@ -39,6 +39,12 @@ export default {
     mounted() {
         new Foundation.AccordionMenu($(this.$refs['list']));
         new Clipboard(this.$refs['copy-button']);
+        $(this.$refs['copy-button']).tooltipster({
+            side: "bottom",
+            content: "Copied to clipboard!",
+            trigger: "click",
+            timer: 1000
+        });
     }
 };
 </script>
