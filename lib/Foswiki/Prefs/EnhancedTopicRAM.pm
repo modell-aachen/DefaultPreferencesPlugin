@@ -24,6 +24,8 @@ sub new {
     # The only way to check this is to inspect the calling function.
     # On a push to the topic context the constructor is always called by Foswiki::Prefs::_getBackend.
     my $inheritedWeb = $this->{values}{INHERITED_WEB};
+    $inheritedWeb =~ s/\s*//g;
+
     my (undef, undef, undef, $subroutine) = caller(1);
     if($inheritedWeb && $subroutine eq 'Foswiki::Prefs::_getBackend'){
       my $prefs = $meta->{_session}->{prefs};
