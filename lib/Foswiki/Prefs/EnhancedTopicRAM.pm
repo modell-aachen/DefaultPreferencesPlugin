@@ -114,10 +114,11 @@ sub stringify {
   while (my ($package, $prefs) = each %{$cache{$type}}) {
     next unless ref($prefs) eq 'HASH';
     while (my ($key, $value) = each %$prefs) {
+      $value = '' unless defined $value;
       $value =~ s/%/%<nop>/g;
       if ($type eq 'site') {
         push @sitePrefs, "   * Set $key = $value <small>(%GREEN%$package%ENDCOLOR%)</small>";
-      } elsif (defined $package && $this->{values}{DEFAULT_SOURCES} =~ /$package/) {
+      } elsif (defined $package && defined $this->{values}{DEFAULT_SOURCES} && $this->{values}{DEFAULT_SOURCES} =~ /$package/) {
         push @webPrefs, "   * Set $key = $value <small>(%GREEN%$package%ENDCOLOR%)</small>";
       } else {
         push @availPrefs, "   * Set $key = $value <small>(%GREEN%$package%ENDCOLOR%)</small>";
