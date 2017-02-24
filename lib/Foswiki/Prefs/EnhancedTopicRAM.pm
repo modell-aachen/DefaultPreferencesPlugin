@@ -37,7 +37,7 @@ sub new {
     $this->{inheritedDefaultPrefs} = ();
 
     # Apply default preferences.
-    $this->fetchPrefs if $meta->topic eq $Foswiki::cfg{SitePrefsTopicName};
+    $this->fetchPrefs unless $cache{inited};
     $this->applyPrefs('site') if ($meta->web.".".$meta->topic) eq $Foswiki::cfg{LocalSitePreferences};
     $this->applyPrefs('web') if $meta->topic eq $Foswiki::cfg{WebPrefsTopicName};
 
@@ -78,6 +78,8 @@ sub fetchPrefs {
     $cache{site}{$package} = $site if defined $site;
     $cache{web}{$package} = $web if defined $web;
   }
+
+  $cache{inited} = 1;
 }
 
 sub applyPrefs {
