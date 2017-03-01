@@ -64,7 +64,7 @@ sub fetchPrefs {
     $_ = Foswiki::Sandbox::untaintUnchecked($_);
     $_ =~ s/\.pm$//;
     $_
-  } grep {/(Addon|Contrib|Skin).pm$/} readdir($dh);
+  } grep {/(?:Addon|Contrib|Skin).pm$/} readdir($dh);
   closedir($dh);
 
   my @modules = map {$_->{module}} @$plugins;
@@ -88,8 +88,8 @@ sub applyPrefs {
 
   while (my ($package, $prefs) = each %{$cache{$type}}) {
     next unless ref($prefs) eq 'HASH';
-    while (my ($key, $value) = each %$prefs) {
-      if ($type eq 'site' || ($this->{values}{DEFAULT_SOURCES} || '') =~ /$package/) {
+    if ($type eq 'site' || ($this->{values}{DEFAULT_SOURCES} || '') =~ /$package/) {
+      while (my ($key, $value) = each %$prefs) {
         # We also track which preferences were set by default preferences
         # so we are able to comprehend from the outside where settings come from.
         $this->{inheritedDefaultPrefs}{$key} = {
