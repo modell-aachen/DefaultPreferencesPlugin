@@ -23,15 +23,8 @@ sub new {
     # topic context push. Otherwise the stack will get corrupted.
     # The only way to check this is to inspect the calling function.
     # On a push to the topic context the constructor is always called by Foswiki::Prefs::_getBackend.
-    my $inheritedWeb = $this->{values}{INHERITED_WEB};
-    $inheritedWeb =~ s/\s*//g if $inheritedWeb;
-
-    my (undef, undef, undef, $subroutine) = caller(1);
-    if($inheritedWeb && $subroutine eq 'Foswiki::Prefs::_getBackend'){
-      my $prefs = $meta->{_session}->{prefs};
-      my $stack = $prefs->{main};
-      my $sourceRam = $prefs->_getBackend(Foswiki::Func::normalizeWebTopicName($inheritedWeb, $Foswiki::cfg{WebPrefsTopicName}));
-      $stack->newLevel($sourceRam);
+    if($this->{values}{INHERITED_WEB}) {
+        $this->{values}{INHERITED_WEB} =~ s/\s*//g;
     }
 
     $this->{inheritedDefaultPrefs} = ();
@@ -43,6 +36,12 @@ sub new {
 
 
     return $this;
+}
+
+sub inheritsFrom {
+    my ($this) = @_;
+
+    return $this->{values}{INHERITED_WEB};
 }
 
 sub fetchPrefs {
