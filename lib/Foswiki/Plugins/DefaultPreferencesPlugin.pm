@@ -34,6 +34,7 @@ sub initPlugin {
 sub nopValue {
   my $value = shift;
   $value =~ s/%/%<nop>/g;
+  $value =~ s/\$/\$<nop>/g;
   return $value;
 }
 
