@@ -16,13 +16,6 @@ sub new {
     my ($proto, $meta) = @_;
     my $this = $proto->SUPER::new($meta);
 
-    # Inherit preferences from the web defined in INHERITED_WEB
-    # by creating a new level in the preferences stack.
-
-    # This should only happen if this constructor is called from a
-    # topic context push. Otherwise the stack will get corrupted.
-    # The only way to check this is to inspect the calling function.
-    # On a push to the topic context the constructor is always called by Foswiki::Prefs::_getBackend.
     if($this->{values}{INHERITED_WEB}) {
         $this->{values}{INHERITED_WEB} =~ s/\s*//g;
     }
