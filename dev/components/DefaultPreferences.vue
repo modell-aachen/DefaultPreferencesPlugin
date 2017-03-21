@@ -12,7 +12,7 @@
                 <label for="sitePrefsOnly">Include SitePreferences only settings</label>
             </fieldset>
         </div>
-        <preference v-for="pref in filteredPreferences" v-bind:key="pref.name" :preference="pref">
+        <preference v-for="pref in filteredPreferences" v-bind:key="pref.name" :preference="pref"></preference>
     </div>
 </template>
 

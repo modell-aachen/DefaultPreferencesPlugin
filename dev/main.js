@@ -1,5 +1,5 @@
-import Vue from 'vue'
-import DefaultPreferences from './components/DefaultPreferences.vue'
+/* global $ Vue */
+import DefaultPreferences from './components/DefaultPreferences.vue';
 
 
 $( function () {
@@ -8,5 +8,5 @@ $( function () {
         components: {
             DefaultPreferences
         }
-    })
-})
+    });
+});

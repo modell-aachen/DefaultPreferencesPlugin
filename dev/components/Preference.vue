@@ -32,7 +32,7 @@ import Clipboard from "clipboard";
 export default {
     props: ["preference"],
     computed: {
-        clipboardText(){
+        clipboardText() {
             return `* Set ${this.preference.name} = ${this.preference.value}`;
         }
     },

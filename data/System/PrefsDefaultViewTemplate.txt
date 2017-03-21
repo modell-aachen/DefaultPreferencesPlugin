@@ -27,7 +27,7 @@ Additional preferences can be inherited from another Web by setting =INHERITED_W
    * Set INHERITED_WEB = OtherWeb
 </verbatim>%TMPL:END%
 
-%TMPL:DEF{"content"}%%TMPL:PREV%%JQREQUIRE{"jqp::tooltipster"}%
+%TMPL:DEF{"content"}%%TMPL:PREV%%JQREQUIRE{"jqp::tooltipster"}%%VUE{VERSION="2"}%
 ---++ Preferences Overview
 
 %IF{"'%TOPIC%'='WebPreferences'" then="$percntTMPL:P{\"text_webprefs\"}$percnt"}%%{
