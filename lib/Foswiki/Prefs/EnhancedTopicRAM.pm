@@ -16,11 +16,25 @@ sub new {
     my ($proto, $meta) = @_;
     my $this = $proto->SUPER::new($meta);
 
-    $this->fetchPrefs if $meta->topic eq $Foswiki::cfg{SitePrefsTopicName};
+    if($this->{values}{INHERITED_WEB}) {
+        $this->{values}{INHERITED_WEB} =~ s/\s*//g;
+    }
+
+    $this->{inheritedDefaultPrefs} = ();
+
+    # Apply default preferences.
+    $this->fetchPrefs unless $cache{inited};
     $this->applyPrefs('site') if ($meta->web.".".$meta->topic) eq $Foswiki::cfg{LocalSitePreferences};
     $this->applyPrefs('web') if $meta->topic eq $Foswiki::cfg{WebPrefsTopicName};
 
+
     return $this;
+}
+
+sub inheritsFrom {
+    my ($this) = @_;
+
+    return $this->{values}{INHERITED_WEB};
 }
 
 sub fetchPrefs {
@@ -42,7 +56,7 @@ sub fetchPrefs {
     $_ = Foswiki::Sandbox::untaintUnchecked($_);
     $_ =~ s/\.pm$//;
     $_
-  } grep {/(Addon|Contrib|Skin).pm$/} readdir($dh);
+  } grep {/(?:Addon|Contrib|Skin).pm$/} readdir($dh);
   closedir($dh);
 
   my @modules = map {$_->{module}} @$plugins;
@@ -56,6 +70,8 @@ sub fetchPrefs {
     $cache{site}{$package} = $site if defined $site;
     $cache{web}{$package} = $web if defined $web;
   }
+
+  $cache{inited} = 1;
 }
 
 sub applyPrefs {
@@ -64,8 +80,15 @@ sub applyPrefs {
 
   while (my ($package, $prefs) = each %{$cache{$type}}) {
     next unless ref($prefs) eq 'HASH';
-    while (my ($key, $value) = each %$prefs) {
-      if ($type eq 'site' || ($this->{values}{DEFAULT_SOURCES} || '') =~ /$package/) {
+    if ($type eq 'site' || ($this->{values}{DEFAULT_SOURCES} || '') =~ /$package/) {
+      while (my ($key, $value) = each %$prefs) {
+        # We also track which preferences were set by default preferences
+        # so we are able to comprehend from the outside where settings come from.
+        $this->{inheritedDefaultPrefs}{$key} = {
+          module => $package,
+          value => $value,
+          isOverridden => exists $this->{values}{$key}
+        };
         $this->{values}{$key} = $value unless exists $this->{values}{$key};
       }
     }
@@ -85,10 +108,11 @@ sub stringify {
   while (my ($package, $prefs) = each %{$cache{$type}}) {
     next unless ref($prefs) eq 'HASH';
     while (my ($key, $value) = each %$prefs) {
+      $value = '' unless defined $value;
       $value =~ s/%/%<nop>/g;
       if ($type eq 'site') {
         push @sitePrefs, "   * Set $key = $value <small>(%GREEN%$package%ENDCOLOR%)</small>";
-      } elsif ($this->{values}{DEFAULT_SOURCES} =~ /$package/) {
+      } elsif (defined $package && defined $this->{values}{DEFAULT_SOURCES} && $this->{values}{DEFAULT_SOURCES} =~ /$package/) {
         push @webPrefs, "   * Set $key = $value <small>(%GREEN%$package%ENDCOLOR%)</small>";
       } else {
         push @availPrefs, "   * Set $key = $value <small>(%GREEN%$package%ENDCOLOR%)</small>";

@@ -6,6 +6,8 @@ use warnings;
 
 use Foswiki::Func;
 use Foswiki::Plugins;
+use List::Util 'max';
+use JSON;
 
 our $VERSION = '2.0';
 our $RELEASE = '2.0';
@@ -29,23 +31,84 @@ sub initPlugin {
   return 1;
 }
 
+sub nopValue {
+  my $value = shift;
+  $value =~ s/%/%<nop>/g;
+  $value =~ s/\$/\$<nop>/g;
+  return $value;
+}
+
 sub tagDEFAULTPREFS {
   my($session, $params, $topic, $web, $topicObject) = @_;
-
   my $levels = $session->{prefs}{main}{levels};
-  my @rams = grep {$_->isa('Foswiki::Prefs::EnhancedTopicRAM')} @$levels;
 
-  my $prefs;
-  if ($topic eq $Foswiki::cfg{WebPrefsTopicName}) {
-    my @webPrefs = grep {$_->{topicObject}->topic eq $Foswiki::cfg{WebPrefsTopicName}} @rams;
-    $prefs = pop(@webPrefs);
-  } elsif ("$web.$topic" eq $Foswiki::cfg{LocalSitePreferences}) {
-    my @sitePrefs = grep {$_->{topicObject}->web.'.'.$_->{topicObject}->topic eq $Foswiki::cfg{LocalSitePreferences}} @rams;
-    $prefs = pop(@sitePrefs);
+  my $preferenceDescriptors = {};
+
+  my $isSitePrefTopic = $topicObject->web.'.'.$topicObject->topic eq $Foswiki::cfg{LocalSitePreferences};
+
+  # We track and parse the preferences in the stack
+  my $foundSitePreferences = 0;
+  my $lastBackend;
+  for(my $i = 0; $i < @$levels - 2; $i++){
+    my $backend = @{$levels}[$i];
+    # We want to start tracking with the SitePreferences
+    if($backend->{topicObject}->topic eq 'SitePreferences'){
+      $foundSitePreferences = 1;
+    }
+    unless($foundSitePreferences){
+      next;
+    }
+    $lastBackend = $backend;
+    foreach(keys %{$backend->{values}}){
+      unless($preferenceDescriptors->{$_}){
+        $preferenceDescriptors->{$_} = {
+          name => $_,
+          inheritPath => [],
+          value => nopValue(Foswiki::Func::getPreferencesValue($_))
+        };
+      }
+      my $isDefaultPref = exists $backend->{inheritedDefaultPrefs}{$_};
+      if ($isDefaultPref) {
+        push(@{$preferenceDescriptors->{$_}->{inheritPath}}, {
+          source => $backend->{inheritedDefaultPrefs}{$_}->{module},
+          value => nopValue($backend->{inheritedDefaultPrefs}{$_}->{value}),
+          isDefaultPref => JSON::true
+        });
+      }
+      unless ($isDefaultPref && !$backend->{inheritedDefaultPrefs}{$_}->{isOverridden}) {
+        push(@{$preferenceDescriptors->{$_}->{inheritPath}}, {
+          source => $backend->{topicObject}->web."/".$backend->{topicObject}->topic,
+          value => nopValue($backend->{values}{$_}),
+          isDefaultPref => JSON::false
+        });
+      }
+    }
   }
 
-  return $prefs->stringify if defined $prefs;
-  return '';
+  my @prefsArray = ();
+  map { push(@prefsArray, $preferenceDescriptors->{$_}) } keys %$preferenceDescriptors;
+  my $jsonPrefs = to_json({
+      isSitePrefTopic => $isSitePrefTopic ? JSON::true : JSON::false,
+      preferences => \@prefsArray
+    });
+
+  Foswiki::Func::addToZone( 'head', 'FONTAWESOME',
+    '<link rel="stylesheet" type="text/css" media="all" href="%PUBURLPATH%/%SYSTEMWEB%/FontAwesomeContrib/css/font-awesome.min.css" />'
+  );
+  Foswiki::Func::addToZone( 'head', 'FLATSKIN_WRAPPED',
+    '<link rel="stylesheet" type="text/css" media="all" href="%PUBURLPATH%/%SYSTEMWEB%/FlatSkin/css/flatskin_wrapped.min.css" />'
+  );
+  Foswiki::Func::addToZone( 'script', 'FOUNDATION',
+    "<script type='text/javascript' src='%PUBURL%/%SYSTEMWEB%/FlatSkin/js/foundation.min.js'></script>","jsi18nCore"
+  );
+  Foswiki::Func::addToZone( 'script', 'DEFAULT_PREFERENCES',
+    "<script type='text/javascript' src='%PUBURL%/%SYSTEMWEB%/DefaultPreferencesPlugin/js/defaultPreferencesPlugin.js'></script>","jsi18nCore"
+  );
+  Foswiki::Func::addToZone( 'script', "DEFAULT_PREFERENCES_PREFS",
+    "<script type='text/json'>$jsonPrefs</script>"
+  );
+
+  return "<default-preferences preferences-selector='DEFAULT_PREFERENCES_PREFS'></default-preferences>"
 }
 
 sub maintenanceHandler {

@@ -3,3 +3,5 @@ data/System/DefaultPreferencesPlugin.txt 0644
 data/System/PrefsDefaultViewTemplate.txt 0644
 lib/Foswiki/Plugins/DefaultPreferencesPlugin.pm 0444
 lib/Foswiki/Prefs/EnhancedTopicRAM.pm 0444
+pub/System/DefaultPreferencesPlugin/js/defaultPreferencesPlugin.js 0644
+pub/System/DefaultPreferencesPlugin/js/defaultPreferencesPlugin.js.map 0644
