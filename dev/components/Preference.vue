@@ -33,7 +33,7 @@ export default {
     props: ["preference"],
     computed: {
         clipboardText() {
-            return `* Set ${this.preference.name} = ${this.preference.value}`;
+            return `   * Set ${this.preference.name} = ${this.preference.value}`;
         }
     },
     mounted() {
