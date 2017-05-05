@@ -32,8 +32,8 @@ import Clipboard from "clipboard";
 export default {
     props: ["preference"],
     computed: {
-        clipboardText(){
-            return `* Set ${this.preference.name} = ${this.preference.value}`;
+        clipboardText() {
+            return `   * Set ${this.preference.name} = ${this.preference.value}`;
         }
     },
     mounted() {
