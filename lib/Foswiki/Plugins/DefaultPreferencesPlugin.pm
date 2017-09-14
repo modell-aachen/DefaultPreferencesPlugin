@@ -14,6 +14,8 @@ our $RELEASE = '2.0';
 our $SHORTDESCRIPTION = 'Custom preferences backend for Q.wiki';
 our $NO_PREFS_IN_TOPIC = 1;
 
+our $sitePrefs;
+
 sub initPlugin {
   my ($topic, $web, $user, $installWeb) = @_;
   if ($Foswiki::Plugins::VERSION < 2.0) {
@@ -29,6 +31,13 @@ sub initPlugin {
   Foswiki::Func::registerTagHandler('DEFAULTPREFS', \&tagDEFAULTPREFS);
 
   return 1;
+}
+
+sub finishPlugin {
+  if($sitePrefs) {
+    $sitePrefs->finish();
+    undef $sitePrefs;
+  }
 }
 
 sub nopValue {
@@ -109,6 +118,18 @@ sub tagDEFAULTPREFS {
   );
 
   return "<default-preferences preferences-selector='DEFAULT_PREFERENCES_PREFS'></default-preferences>"
+}
+
+sub getSitePreferencesValue {
+  my ($name, $session) = @_;
+  $session ||= $Foswiki::Plugins::SESSION;
+
+  unless($sitePrefs) {
+      $sitePrefs = Foswiki::Prefs->new($session);
+      $sitePrefs->loadSitePreferences();
+  }
+
+  return $sitePrefs->getPreference($name);
 }
 
 sub maintenanceHandler {
