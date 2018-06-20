@@ -8,6 +8,7 @@ use Foswiki::Func;
 use Foswiki::Plugins;
 use List::Util 'max';
 use JSON;
+use Digest::MD5 qw(md5_hex);
 
 our $VERSION = '2.0';
 our $RELEASE = '2.0';
@@ -117,7 +118,13 @@ sub tagDEFAULTPREFS {
     "<script type='text/json'>$jsonPrefs</script>"
   );
 
-  return "<default-preferences preferences-selector='DEFAULT_PREFERENCES_PREFS'></default-preferences>"
+  my $clientId = "DefaultPrefs_" . substr(md5_hex(rand), -6);
+  my $clientToken = Foswiki::Plugins::VueJSPlugin::registerClient( $clientId );
+  return sprintf(
+      '<div class="DefaultPrefsContainer" data-vue-client-id="%s" data-vue-client-token="%s" ><default-preferences preferences-selector="DEFAULT_PREFERENCES_PREFS"></default-preferences></div>',
+      $clientId,
+      $clientToken
+  );
 }
 
 sub getSitePreferencesValue {
