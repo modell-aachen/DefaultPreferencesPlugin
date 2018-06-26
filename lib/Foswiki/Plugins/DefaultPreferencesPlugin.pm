@@ -8,7 +8,6 @@ use Foswiki::Func;
 use Foswiki::Plugins;
 use List::Util 'max';
 use JSON;
-use Digest::MD5 qw(md5_hex);
 
 our $VERSION = '2.0';
 our $RELEASE = '2.0';
@@ -103,28 +102,26 @@ sub tagDEFAULTPREFS {
     });
 
   Foswiki::Func::addToZone( 'head', 'FONTAWESOME',
-    '<link rel="stylesheet" type="text/css" media="all" href="%PUBURLPATH%/%SYSTEMWEB%/FontAwesomeContrib/css/font-awesome.min.css" />'
-  );
+    "<link rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=\"%PUBURLPATH%/%SYSTEMWEB%/FontAwesomeContrib/css/font-awesome.min.css?v=$RELEASE\" />");
   Foswiki::Func::addToZone( 'head', 'FLATSKIN_WRAPPED',
-    '<link rel="stylesheet" type="text/css" media="all" href="%PUBURLPATH%/%SYSTEMWEB%/FlatSkin/css/flatskin_wrapped.min.css" />'
+    "<link rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=\"%PUBURLPATH%/%SYSTEMWEB%/FlatSkin/css/flatskin_wrapped.min.css?v=$RELEASE\" />"
   );
   Foswiki::Func::addToZone( 'script', 'FOUNDATION',
-    "<script type='text/javascript' src='%PUBURL%/%SYSTEMWEB%/FlatSkin/js/foundation.min.js'></script>","jsi18nCore"
+    "<script type='text/javascript' src='%PUBURL%/%SYSTEMWEB%/FlatSkin/js/foundation.min.js?v=$RELEASE'></script>","jsi18nCore"
   );
   Foswiki::Func::addToZone( 'script', 'DEFAULT_PREFERENCES',
-    "<script type='text/javascript' src='%PUBURL%/%SYSTEMWEB%/DefaultPreferencesPlugin/js/defaultPreferencesPlugin.js'></script>","jsi18nCore"
+    "<script type='text/javascript' src='%PUBURL%/%SYSTEMWEB%/DefaultPreferencesPlugin/js/defaultPreferencesPlugin.js?v=$RELEASE'></script>","jsi18nCore"
   );
   Foswiki::Func::addToZone( 'script', "DEFAULT_PREFERENCES_PREFS",
     "<script type='text/json'>$jsonPrefs</script>"
   );
 
-  my $clientId = "DefaultPrefs_" . substr(md5_hex(rand), -6);
-  my $clientToken = Foswiki::Plugins::VueJSPlugin::registerClient( $clientId );
-  return sprintf(
-      '<div class="DefaultPrefsContainer" data-vue-client-id="%s" data-vue-client-token="%s" ><default-preferences preferences-selector="DEFAULT_PREFERENCES_PREFS"></default-preferences></div>',
-      $clientId,
-      $clientToken
-  );
+  my $clientToken = Foswiki::Plugins::VueJSPlugin::getClientToken();
+  return <<HTML;
+    <div class="DefaultPrefsContainer" data-vue-client-token="$clientToken" >
+      <default-preferences preferences-selector="DEFAULT_PREFERENCES_PREFS"></default-preferences>
+    </div>
+HTML
 }
 
 sub getSitePreferencesValue {
