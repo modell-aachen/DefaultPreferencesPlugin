@@ -101,15 +101,6 @@ sub tagDEFAULTPREFS {
       preferences => \@prefsArray
     });
 
-  Foswiki::Func::addToZone( 'head', 'FONTAWESOME',
-    '<link rel="stylesheet" type="text/css" media="all" href="%PUBURLPATH%/%SYSTEMWEB%/FontAwesomeContrib/css/font-awesome.min.css" />'
-  );
-  Foswiki::Func::addToZone( 'head', 'FLATSKIN_WRAPPED',
-    '<link rel="stylesheet" type="text/css" media="all" href="%PUBURLPATH%/%SYSTEMWEB%/FlatSkin/css/flatskin_wrapped.min.css" />'
-  );
-  Foswiki::Func::addToZone( 'script', 'FOUNDATION',
-    "<script type='text/javascript' src='%PUBURL%/%SYSTEMWEB%/FlatSkin/js/foundation.min.js'></script>","jsi18nCore"
-  );
   Foswiki::Func::addToZone( 'script', 'DEFAULT_PREFERENCES',
     "<script type='text/javascript' src='%PUBURL%/%SYSTEMWEB%/DefaultPreferencesPlugin/js/defaultPreferencesPlugin.js'></script>","jsi18nCore"
   );
