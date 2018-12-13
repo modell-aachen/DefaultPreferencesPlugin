@@ -101,6 +101,7 @@ sub tagDEFAULTPREFS {
       preferences => \@prefsArray
     });
 
+  $jsonPrefs = MIME::Base64::encode_base64(Encode::encode_utf8($jsonPrefs));
   Foswiki::Func::addToZone( 'script', 'DEFAULT_PREFERENCES',
     "<script type='text/javascript' src='%PUBURL%/%SYSTEMWEB%/DefaultPreferencesPlugin/js/defaultPreferencesPlugin.js'></script>","jsi18nCore"
   );
