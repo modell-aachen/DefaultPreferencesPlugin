@@ -1,24 +1,23 @@
 <template>
     <div class="flatskin-wrapped">
-        <div class="expanded row">
-            <div class="columns">
+        <div class="grid-x grid-margin-x">
+            <div class="cell auto">
                 <label>Filter
                     <input type="text" v-model="filter">
                 </label>
             </div>
-            <fieldset v-if="!isSitePrefTopic" class="shrink columns">
+            <fieldset v-if="!isSitePrefTopic" class="shrink cell">
                 <legend>Options</legend>
-                <input id="sitePrefsOnly" type="checkbox" v-model="showSitePrefsOnlySettings">
-                <label for="sitePrefsOnly">Include SitePreferences only settings</label>
+                <vue-check-item name="sitePreferencesOnly" v-model="showSitePrefsOnlySettings">Include SitePreferences only settings</vue-check-item>
             </fieldset>
         </div>
+        <vue-spacer/>
         <preference v-for="pref in filteredPreferences" v-bind:key="pref.name" :preference="pref"></preference>
     </div>
 </template>
 
 
 <script>
-/* global $ */
 import Preference from './Preference.vue';
 export default {
     data(){
@@ -53,7 +52,7 @@ export default {
         }
     },
     created() {
-        let config = JSON.parse($("." + this.preferencesSelector).html());
+        let config = Vue.getConfigById(this.preferencesSelector);
         this.prefs = config.preferences;
         this.isSitePrefTopic = config.isSitePrefTopic;
         this.showSitePrefsOnlySettings = this.isSitePrefTopic;

@@ -40,13 +40,6 @@ sub finishPlugin {
   }
 }
 
-sub nopValue {
-  my $value = shift;
-  $value =~ s/%/%<nop>/g;
-  $value =~ s/\$/\$<nop>/g;
-  return $value;
-}
-
 sub tagDEFAULTPREFS {
   my($session, $params, $topic, $web, $topicObject) = @_;
   my $levels = $session->{prefs}{main}{levels};
@@ -73,21 +66,21 @@ sub tagDEFAULTPREFS {
         $preferenceDescriptors->{$_} = {
           name => $_,
           inheritPath => [],
-          value => nopValue(Foswiki::Func::getPreferencesValue($_))
+          value => Foswiki::Func::getPreferencesValue($_),
         };
       }
       my $isDefaultPref = exists $backend->{inheritedDefaultPrefs}{$_};
       if ($isDefaultPref) {
         push(@{$preferenceDescriptors->{$_}->{inheritPath}}, {
           source => $backend->{inheritedDefaultPrefs}{$_}->{module},
-          value => nopValue($backend->{inheritedDefaultPrefs}{$_}->{value}),
+          value => $backend->{inheritedDefaultPrefs}{$_}->{value},
           isDefaultPref => JSON::true
         });
       }
       unless ($isDefaultPref && !$backend->{inheritedDefaultPrefs}{$_}->{isOverridden}) {
         push(@{$preferenceDescriptors->{$_}->{inheritPath}}, {
           source => $backend->{topicObject}->web."/".$backend->{topicObject}->topic,
-          value => nopValue($backend->{values}{$_}),
+          value => $backend->{values}{$_},
           isDefaultPref => JSON::false
         });
       }
@@ -101,15 +94,7 @@ sub tagDEFAULTPREFS {
       preferences => \@prefsArray
     });
 
-  Foswiki::Func::addToZone( 'head', 'FONTAWESOME',
-    '<link rel="stylesheet" type="text/css" media="all" href="%PUBURLPATH%/%SYSTEMWEB%/FontAwesomeContrib/css/font-awesome.min.css" />'
-  );
-  Foswiki::Func::addToZone( 'head', 'FLATSKIN_WRAPPED',
-    '<link rel="stylesheet" type="text/css" media="all" href="%PUBURLPATH%/%SYSTEMWEB%/FlatSkin/css/flatskin_wrapped.min.css" />'
-  );
-  Foswiki::Func::addToZone( 'script', 'FOUNDATION',
-    "<script type='text/javascript' src='%PUBURL%/%SYSTEMWEB%/FlatSkin/js/foundation.min.js'></script>","jsi18nCore"
-  );
+  $jsonPrefs = MIME::Base64::encode_base64(Encode::encode_utf8($jsonPrefs));
   Foswiki::Func::addToZone( 'script', 'DEFAULT_PREFERENCES',
     "<script type='text/javascript' src='%PUBURL%/%SYSTEMWEB%/DefaultPreferencesPlugin/js/defaultPreferencesPlugin.js'></script>","jsi18nCore"
   );

@@ -8,6 +8,9 @@
         "commonjs": true,
         "es6": true
     },
+    globals: {
+        "Vue": false
+    },
     rules: {
         "linebreak-style": ["error", "unix"],
         "no-console": ["warn", {allow: ["warn", "error"]}],
