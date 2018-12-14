@@ -40,13 +40,6 @@ sub finishPlugin {
   }
 }
 
-sub nopValue {
-  my $value = shift;
-  $value =~ s/%/%<nop>/g;
-  $value =~ s/\$/\$<nop>/g;
-  return $value;
-}
-
 sub tagDEFAULTPREFS {
   my($session, $params, $topic, $web, $topicObject) = @_;
   my $levels = $session->{prefs}{main}{levels};
