@@ -73,21 +73,21 @@ sub tagDEFAULTPREFS {
         $preferenceDescriptors->{$_} = {
           name => $_,
           inheritPath => [],
-          value => nopValue(Foswiki::Func::getPreferencesValue($_))
+          value => Foswiki::Func::getPreferencesValue($_),
         };
       }
       my $isDefaultPref = exists $backend->{inheritedDefaultPrefs}{$_};
       if ($isDefaultPref) {
         push(@{$preferenceDescriptors->{$_}->{inheritPath}}, {
           source => $backend->{inheritedDefaultPrefs}{$_}->{module},
-          value => nopValue($backend->{inheritedDefaultPrefs}{$_}->{value}),
+          value => $backend->{inheritedDefaultPrefs}{$_}->{value},
           isDefaultPref => JSON::true
         });
       }
       unless ($isDefaultPref && !$backend->{inheritedDefaultPrefs}{$_}->{isOverridden}) {
         push(@{$preferenceDescriptors->{$_}->{inheritPath}}, {
           source => $backend->{topicObject}->web."/".$backend->{topicObject}->topic,
-          value => nopValue($backend->{values}{$_}),
+          value => $backend->{values}{$_},
           isDefaultPref => JSON::false
         });
       }

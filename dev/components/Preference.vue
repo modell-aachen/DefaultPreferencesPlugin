@@ -11,9 +11,7 @@
                 ref="copy-button"
                 type='icon'
                 icon='fas fa-clipboard'
-                v-clipboard:copy="clipboardText"
-                v-clipboard:success="copySuccess"
-                v-clipboard:error="copyError"
+                @click.native="copySetting"
                 no-margins/>
                 <vue-spacer/>
         </div>
