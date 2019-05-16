@@ -81,7 +81,7 @@ export default {
     },
 };
 </script>
-<style lang="sass">
+<style lang="scss">
 .pref-path, .pref-path :link {
     font-size: 12px;
 }
