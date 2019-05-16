@@ -1,12 +1,12 @@
 /* global $ Vue */
 import DefaultPreferences from './components/DefaultPreferences.vue';
 
-$( function () {
+$(function () {
     Vue.instantiateEach('#defaultPrefs',
         {
             components: {
-                DefaultPreferences
-            }
+                DefaultPreferences,
+            },
         }
     );
 });

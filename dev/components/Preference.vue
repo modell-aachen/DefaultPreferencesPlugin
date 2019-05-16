@@ -2,21 +2,21 @@
     <div class="grid-x grid-margin-x">
         <div class="cell shrink">
             <vue-button
+                ref="copy-button"
                 v-tooltip="{
                     content: tooltipText,
                     show: tooltipVisible,
                     trigger: 'manual',
                     placement: 'bottom-center',
                     classes: 'flatskin-wrapped v-tooltip-success'}"
-                ref="copy-button"
-                type='icon'
-                icon='fas fa-clipboard'
-                @click.native="copySetting"
-                no-margins/>
-                <vue-spacer/>
+                type="icon"
+                icon="fas fa-clipboard"
+                no-margins
+                @click.native="copySetting" />
+            <vue-spacer />
         </div>
         <div class="cell auto">
-            <a href="#">Set {{preference.name}} = {{preference.value}}</a>
+            <a href="#">Set {{ preference.name }} = {{ preference.value }}</a>
             <i
                 :class="chevronByCollapsed"
                 class="ma-dark-grey-color fas fa-fw"
@@ -25,11 +25,17 @@
                 :active="!collapsed"
                 :duration="300">
                 <ul class="menu vertical nested">
-                    <li v-for="path in preference.inheritPath" :key="path.source">
-                        <span>Set {{preference.name}} = {{path.value}}</span>
+                    <li
+                        v-for="path in preference.inheritPath"
+                        :key="path.source">
+                        <span>Set {{ preference.name }} = {{ path.value }}</span>
                         <div class="pref-path">
-                            <template v-if="path.isDefaultPref">({{path.source}})</template>
-                            <a v-else v-bind:href="'/'+path.source">({{path.source}})</a>
+                            <template v-if="path.isDefaultPref">
+                                ({{ path.source }})
+                            </template>
+                            <a
+                                v-else
+                                :href="'/'+path.source">({{ path.source }})</a>
                         </div>
                     </li>
                 </ul>
@@ -41,7 +47,12 @@
 <script>
 /* global window */
 export default {
-    props: ["preference"],
+    props: {
+        preference: {
+            type: Object,
+            required: true,
+        },
+    },
     data() {
         return {
             collapsed: true,
@@ -56,7 +67,7 @@ export default {
             return `   * Set ${this.preference.name} = ${this.preference.value}`;
         },
         chevronByCollapsed() {
-            return this.collapsed ? "fa-chevron-right" : "fa-chevron-down";
+            return this.collapsed ? 'fa-chevron-right' : 'fa-chevron-down';
         },
     },
     methods: {
@@ -67,13 +78,14 @@ export default {
             this.tooltipText = this.$data[`copy${state}Text`];
             this.tooltipClass = 'flatskin-wrapped v-tooltip-' + state;
             this.tooltipVisible = true;
-            window.setTimeout(() => this.tooltipVisible = false, 2000);
+            window.setTimeout(() => {
+                this.tooltipVisible = false;
+            }, 2000);
         },
         async copySetting() {
             try {
                 await this.$copyText(this.clipboardText);
-            }
-            catch (err) {
+            } catch (err) {
                 this.showTooltip('Error');
             }
             this.showTooltip('Success');
