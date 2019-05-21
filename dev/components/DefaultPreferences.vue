@@ -57,7 +57,9 @@ export default {
                     return false;
                 }
                 // Filter string is empty -> Include everything
-                if(!this.filter) { return true; }
+                if(!this.filter) {
+                    return true;
+                }
                 let tester = new RegExp(this.filter.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1'), 'gi');
                 return tester.test(pref.name) || tester.test(pref.value);
             }).sort((a, b) => {
