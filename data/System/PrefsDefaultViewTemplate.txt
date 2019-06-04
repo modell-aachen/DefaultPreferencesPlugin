@@ -13,7 +13,7 @@ component. E.g.
    * Set DEFAULT_SOURCES = QwikiContrib,ModacSkin
 </verbatim>
 
-%RED% *Please note:* %ENDCOLOR%%BR%
+%RED{encode="none"}% *Please note:* %ENDCOLOR{encode="none"}%%BR%
 Enabling components which are providing the same preferences keys won't override
 each other. The first component including that key will define the preferences
 value.%BR%

@@ -111,11 +111,11 @@ sub stringify {
       $value = '' unless defined $value;
       $value =~ s/%/%<nop>/g;
       if ($type eq 'site') {
-        push @sitePrefs, "   * Set $key = $value <small>(%GREEN%$package%ENDCOLOR%)</small>";
+        push @sitePrefs, "   * Set $key = $value <small>(%GREEN{encode=\"none\"}%$package%ENDCOLOR{encode=\"none\"}%)</small>";
       } elsif (defined $package && defined $this->{values}{DEFAULT_SOURCES} && $this->{values}{DEFAULT_SOURCES} =~ /$package/) {
-        push @webPrefs, "   * Set $key = $value <small>(%GREEN%$package%ENDCOLOR%)</small>";
+        push @webPrefs, "   * Set $key = $value <small>(%GREEN{encode=\"none\"}%$package%ENDCOLOR{encode=\"none\"}%)</small>";
       } else {
-        push @availPrefs, "   * Set $key = $value <small>(%GREEN%$package%ENDCOLOR%)</small>";
+        push @availPrefs, "   * Set $key = $value <small>(%GREEN{encode=\"none\"}%$package%ENDCOLOR{encode=\"none\"}%)</small>";
       }
     }
   }
